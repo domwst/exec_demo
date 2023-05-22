@@ -1,0 +1,27 @@
+{% extends 'main/menu-base.html' %}
+{% load static %}
+
+{% block head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'main/highlight/styles/googlecode.min.css' %}"/>
+{% endblock %}
+
+{% block body %}
+{{ block.super }}
+
+<div class="container-md">
+<h3>Submission #{{ subm.pk }} ({{ subm.timestamp|date:"j M, H:i:s" }}). {{ subm.overallStatus }}.
+{% if subm.overallStatus == 'OK' %}<a href="{% url 'download-binary' subm.pk %}">Download</a>{% endif %}</h3>
+
+{% if logs %}
+<h3>Compilation logs</h3>
+<pre>{{ logs.decode }}</pre>
+{% endif %}
+
+<h3>Source code:</h3>
+<pre><code class="language-cpp">{{ source.decode|escape }}</code></pre>
+</div>
+
+<script src="{% static 'main/highlight/highlight.min.js' %}"></script>
+<script>hljs.highlightAll();</script>
+{% endblock %}

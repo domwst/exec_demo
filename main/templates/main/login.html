@@ -1,0 +1,31 @@
+{% extends 'main/menu-base.html' %}
+
+{% block body %}
+{{ block.super }}
+
+<main class="text-center">
+<div style="max-width: 350px;" class="mx-auto">
+{% if error_msg %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error_msg }}
+    <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<h3>Sign in</h3>
+<form method="POST">
+    <div class="form-floating">
+        <input name="login" type="text" id="login" class="form-control" placeholder="Username"/>
+        <label for="login">Username</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input name="password" type="password" id="password" class="form-control" placeholder="Password"/>
+        <label for="password">Password</label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary">Sign in</button>
+    {% csrf_token %}
+</form>
+</div>
+</main>
+
+{% endblock %}
