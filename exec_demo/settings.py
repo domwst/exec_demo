@@ -23,7 +23,7 @@ with open(BASE_DIR / "configs/configs.json", "r") as config_file:
 def getJson(value):
     evalPrefix = "eval "
     if isinstance(value, str) and value.startswith(evalPrefix):
-        return eval(value.removeprefix(evalPrefix))
+        return eval(value[len(evalPrefix):])
     if isinstance(value, list):
         return [getJson(item) for item in value]
     if isinstance(value, dict):
