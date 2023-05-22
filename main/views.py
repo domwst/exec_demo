@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.utils import timezone
-from main.models import Submission
+from main.models import Submission, OverallCompilationResult
 from .exec_api import submit, getArtifact
 
 
@@ -44,7 +44,6 @@ class SubmissionsView(View):
             return redirect("login")
         submissions_to_check = req.user.submission_set.filter(nextCheck__lte=timezone.now())
         for subm in submissions_to_check:
-            print(f"Trying to update {subm}")
             subm.tryUpdate()
         submissions = req.user.submission_set.order_by("-timestamp")
         return render(req, "main/submissions.html", {
@@ -87,14 +86,13 @@ class SubmissionView(View):
         subm = get_object_or_404(Submission, pk=id)
         if not req.user.is_staff and subm.user != req.user:
             raise PermissionDenied("Not your submission")
-        print(
-            f"KEK: {subm.status}\n{Submission.CompilationStatus.FINISHED}\n{subm.status == Submission.CompilationStatus.FINISHED}")
         return render(req, 'main/submission.html', {
             'source': getArtifact(subm.sourceId),
             'subm': subm,
             'logs': getArtifact(subm.compilationResult.errorLog)
             if subm.status == Submission.CompilationStatus.FINISHED else None,
         })
+
 
 
 class DownloadBinary(View):
@@ -107,7 +105,9 @@ class DownloadBinary(View):
         subm.tryUpdate()
         if subm.status != Submission.CompilationStatus.FINISHED:
             raise BadRequest("The submission is not yet finished")
+        if subm.overallStatus() != OverallCompilationResult.OK:
+            raise BadRequest("Compilation has failed")
         content = getArtifact(subm.compilationResult.binaryId)
         resp = HttpResponse(content, content_type="application/octet-stream")
-        # resp["Content-Length"] = len(content)
+        resp["Content-Length"] = len(content)
         return resp
