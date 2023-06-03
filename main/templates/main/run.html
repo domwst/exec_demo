@@ -1,0 +1,63 @@
+{% extends 'main/menu-base.html' %}
+{% load static %}
+
+
+{% block body %}
+{{ block.super }}
+
+<div class="container-md">
+<h3>Run #{{ run.pk }} ({{ run.timestamp|date:"j M, H:i:s" }}) of submission
+    <a href="{% url 'submission' run.submission.pk %}">#{{ run.submission.pk }}</a>. {{ run.overallStatus }}.</h3>
+
+{% if runResult %}
+<h4>Statistics</h4>
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <td>Max memory</td><td>{{ runResult.maxMemoryBytes }} b</td>
+    </tr>
+    <tr>
+      <td>Cpu total</td><td>{{ runResult.cpuTotalUsage.total_seconds }} s</td>
+    </tr>
+    <tr>
+      <td>Cpu system</td><td>{{ runResult.cpuSystemUsage.total_seconds }} s</td>
+    </tr>
+    <tr>
+      <td>Cpu user</td><td>{{ runResult.cpuUserUsage.total_seconds }} s</td>
+    </tr>
+    <tr>
+      <td>Wall time</td><td>{{ runResult.wallTime.total_seconds }} s</td>
+    </tr>
+    <tr>
+      <td>Exit status</td>
+      <td>
+        {% if runResult.exitStatus.type == 'S'%}
+          Signaled
+        {% else %}
+          Exited
+        {% endif %}
+        {{ runResult.exitStatus.code }}
+      </td>
+    </tr>
+    <tr>
+      <td>Stdout size</td><td>{{ stdout|length }}</td>
+    </tr>
+    <tr>
+      <td>Stderr size</td><td>{{ stderr|length }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Stdout</h4>
+<pre>{{ stdout.decode }}</pre>
+
+<h4>Stderr</h4>
+<pre>{{ stderr.decode }}</pre>
+{% else %}
+  <h3>The run is still in process, keep reloading the page</h3>
+{% endif %}
+</div>
+
+<script src="{% static 'main/highlight/highlight.min.js' %}"></script>
+<script>hljs.highlightAll();</script>
+{% endblock %}

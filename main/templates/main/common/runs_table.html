@@ -1,0 +1,22 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Time</th>
+    <th scope="col">Status</th>
+  </tr>
+  </thead>
+  <tbody>
+    {% for run in runs %}
+      <tr>
+        <th scope="row"><a href="{% url 'run' run.pk %}">{{ run.pk }}</a></th>
+        <td>
+          {{ run.timestamp|date:"j M H:i:s" }}
+        </td>
+        <td>
+          <span>{{ run.overallStatus }}</span>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

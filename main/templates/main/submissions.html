@@ -5,43 +5,54 @@
 
 <div class="container-md">
 <div class="row">
-    <div class="col-6">
-        <h2 class="h2">Your submissions:</h2>
+  <div class="col-6">
+    <h2 class="h2">Your submissions:</h2>
+  </div>
+  <div class="col-6">
+  {% if error_msg %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error_msg }}
+    <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <div class="col-6">
-    {% if error_msg %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ error_msg }}
-        <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endif %}
-        <form method="POST" enctype="multipart/form-data">
-            <legend>Submit one more</legend>
-            <div class="input-group mt-2">
-                <input type="file" class="form-control" id="file-input" name="source"/>
-                <button class="input-group-text" type="submit">Submit!</button>
-            </div>
-            {% csrf_token %}
-        </form>
-    </div>
+  {% endif %}
+    <form method="POST" enctype="multipart/form-data">
+      <legend>Submit one more</legend>
+      <div class="input-group mt-2">
+        <input type="file" class="form-control" id="file-input" name="source"/>
+        <button class="input-group-text" type="submit">Submit!</button>
+      </div>
+      {% csrf_token %}
+    </form>
+  </div>
 </div>
 <table class="table table-striped">
 <thead>
 <tr>
-    <th scope="col">#</th>
-    <th scope="col">Time</th>
-    <th scope="col">Status</th>
+  <th scope="col">#</th>
+  <th scope="col">Run</th>
+  <th scope="col">Time</th>
+  <th scope="col">Status</th>
 </tr>
 </thead>
 <tbody>
 {% for subm in submissions %}
 <tr>
-    <th scope="row"><a href="{% url 'submission' subm.pk %}">{{ subm.pk }}</a></th>
-    <td>
-        {{ subm.timestamp|date:"j M, H:i:s" }}
-    </td>
-    <td>
-        <span>{{ subm.overallStatus }}</span>
+  <th scope="row"><a href="{% url 'submission' subm.pk %}">{{ subm.pk }}</a></th>
+  <td>
+    {% if subm.overallStatus == 'OK' %}
+      <form method="POST" action="{% url 'create-run' subm.pk %}">
+        <button class="btn btn-outline-success btn-sm" type="submit">
+          <i class="bi bi-play-fill"></i>
+        </button>
+        {% csrf_token %}
+      </form>
+    {% endif %}
+  </td>
+  <td>
+    {{ subm.timestamp|date:"j M H:i:s" }}
+  </td>
+  <td>
+    <span>{{ subm.overallCompilationStatus }}</span>
 {#        {% if subm.status == 'W' %}#}
 {#            <span class="text-muted">In queue</span>#}
 {#        {% elif subm.status == 'C' %}#}
@@ -51,7 +62,7 @@
 {#        {% else %}#}
 {#            <a href="{% url 'submission' subm.pk %}" class="text-danger">Compilation error</a>#}
 {#        {% endif %}#}
-    </td>
+  </td>
 </tr>
 {% endfor %}
 </tbody>

@@ -1,0 +1,10 @@
+{% extends 'main/menu-base.html' %}
+
+{% block body %}
+{{ block.super }}
+
+<div class="container-md">
+{% include 'main/common/runs_table.html' %}
+</div>
+
+{% endblock %}
