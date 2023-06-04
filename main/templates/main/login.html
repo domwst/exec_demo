@@ -12,19 +12,51 @@
 </div>
 {% endif %}
 
-<h3>Sign in</h3>
-<form method="POST">
-    <div class="form-floating">
-        <input name="login" type="text" id="login" class="form-control" placeholder="Username"/>
-        <label for="login">Username</label>
-    </div>
-    <div class="form-floating mb-3">
-        <input name="password" type="password" id="password" class="form-control" placeholder="Password"/>
-        <label for="password">Password</label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary">Sign in</button>
-    {% csrf_token %}
-</form>
+<ul class="nav nav-pills mb-3 nav-justified" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link fs-5 {% if not signup %}active{% endif %}" id="tab-login" data-bs-toggle="pill" href="#pills-login" role="tab"
+      aria-controls="pills-login {% if signup %}active{% endif %}" aria-selected="true">Login</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link fs-5 {% if signup %}active{% endif %}" id="tab-register" data-bs-toggle="pill" href="#pills-register" role="tab"
+      aria-controls="pills-register" aria-selected="false">Register</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade {% if not signup %}show active{% endif %}" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+    <form method="POST">
+      <div class="form-floating mb-2">
+          <input name="login" type="text" id="login" class="form-control" placeholder="Username"/>
+          <label for="login">Username</label>
+      </div>
+      <div class="form-floating mb-2">
+          <input name="password" type="password" id="password" class="form-control" placeholder="Password"/>
+          <label for="password">Password</label>
+      </div>
+      <button class="w-100 fw-bolder btn btn-lg btn-primary mt-4">Sign in</button>
+      {% csrf_token %}
+    </form>
+  </div>
+  <div class="tab-pane fade {% if signup %}show active{% endif %}" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+    <form method="POST" action="{% url 'signup' %}">
+      <div class="form-floating mb-2">
+          <input name="login" type="text" id="login" class="form-control" placeholder="Username"/>
+          <label for="login">Username</label>
+      </div>
+      <div class="form-floating mb-2">
+          <input name="password1" type="password" id="password-1" class="form-control" placeholder="Password"/>
+          <label for="password-1">Password</label>
+      </div>
+      <div class="form-floating mb-2">
+          <input name="password2" type="password" id="password-2" class="form-control" placeholder="Repeat password"/>
+          <label for="password-2">Repeat password</label>
+      </div>
+      <button class="w-100 fw-bolder btn btn-lg btn-primary mt-4">Sign up</button>
+      {% csrf_token %}
+    </form>
+  </div>
+</div>
 </div>
 </main>
 

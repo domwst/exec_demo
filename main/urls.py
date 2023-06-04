@@ -3,9 +3,10 @@ from django.urls import path
 from .views import (
     SubmissionsView,
     SubmissionView,
-    Login,
+    LoginView,
     Index,
-    Logout,
+    LogoutView,
+    SignupView,
     RunView,
     RunsView,
     CreateRunView,
@@ -13,8 +14,9 @@ from .views import (
 
 url_patterns = [
     path('', Index.as_view(), name='index'),
-    path('login', Login.as_view(), name='login'),
-    path('logout', Logout.as_view(), name='logout'),
+    path('login', LoginView.as_view(), name='login'),
+    path('signup', SignupView.as_view(), name='signup'),
+    path('logout', LogoutView.as_view(), name='logout'),
     path('submissions', SubmissionsView.as_view(), name='submissions'),
     path('submission/<int:id>', SubmissionView.as_view(), name='submission'),
     path('run/<int:id>', RunView.as_view(), name='run'),

@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from main.models import ExecStatus, Run, OverallRunStatus, Submission
+from main.models_impl import ExecStatus, Run, OverallRunStatus, Submission
 from main.tools.exec_api import execApi
 
 

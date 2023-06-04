@@ -96,8 +96,8 @@ class OverallRunStatus(models.TextChoices):
             return OverallRunStatus.WALL_TIME_LIMIT
         if rr == AbstractRunResult.RunResult.CPU_TIME_LIMIT:
             return OverallRunStatus.CPU_TIME_LIMIT
-        if rr == AbstractRunResult.RunResult.WALL_TIME_LIMIT:
-            return OverallRunStatus.WALL_TIME_LIMIT
+        if rr == AbstractRunResult.RunResult.MEMORY_LIMIT:
+            return OverallRunStatus.MEMORY_LIMIT
 
     ENQUEUED = ExecStatus.ENQUEUED
     RUNNING = ExecStatus.RUNNING

@@ -1,12 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied, BadRequest
-from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from main.models_impl.abstract_run_result import ExecStatus, OverallRunStatus
-from main.models_impl.submission import Submission
+from main.models_impl import ExecStatus, Submission
 from main.tools.exec_api import execApi
 
 
@@ -40,8 +38,8 @@ class SubmissionsView(View):
         s = b''.join(c for c in source.chunks())
         inf = execApi.submit(s)
         subm = Submission(
-            execId=inf['id'],
-            sourceId=inf['src-id'],
+            execId=inf.id,
+            sourceId=inf.srcId,
             user=req.user,
         )
         subm.save()

@@ -10,14 +10,6 @@ from typing import Optional
 
 from django.conf import settings
 
-# time.wall: 4010041
-# time.cpu.total: 4005683
-# time.cpu.user: 3997696
-# time.cpu.system: 7987
-# memory.max: 286720
-# status: signaled 9
-# verdict: TL
-
 
 @dataclass
 class ExitStatus:
@@ -146,19 +138,33 @@ class RunStatus:
         )
 
 
+@dataclass
+class Submission:
+    id: str
+    srcId: str
+
+    @staticmethod
+    def FromExec(json) -> Submission:
+        return Submission(
+            id=json['id'],
+            srcId=json['src-id'],
+        )
+
+
 class ExecApi:
     def __init__(self, url=settings.EXEC_API_URL, token=settings.EXEC_API_TOKEN):
         self.url = url
         self.token = token
 
-    def submit(self, file: bytes):
+    def submit(self, file: bytes) -> Submission:
         resp = httpx.post(
             f'{self.url}/submit',
             params={'token': self.token},
             files={'file': file},
         )
         resp.raise_for_status()
-        return resp.json()
+
+        return Submission.FromExec(resp.json())
 
     def getSubmissionStatus(self, id: str) -> CompilationStatus:
         resp = httpx.get(
